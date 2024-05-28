@@ -23,14 +23,15 @@ int main(int argc, char *argv[]) {
 				hash();
 				//arbol();
 			}break;
-			
+			case 3:{	
+				FHash ( list *cadena[] );
+			}break;
 			case 4:{
 				printf("\n -- exit success --");
 				exit(0);
 			}break;
-
 			default:{
-				printf("\n --error input, select 1-4");
+				printf("\n -- error input, select 1-4 --");
 			}break;
 		}
 	}
