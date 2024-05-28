@@ -12,8 +12,8 @@ Comparar la rapidez y eficiencia de búsqueda entre tres algoritmos
 
 #### Cmake
 1. Crea una carpeta llamada build y entra a ella
-2. ejecuta 'cmake ..'
-3. ejecuta 'cmake --build .'
+2. Ejecuta 'cmake ..'
+3. Ejecuta 'cmake --build .'
 
 #### Gcc
-ejecuta 'gcc -o DesafioHashKRA app.c tabla_hash.c arbol_binario.c'
+- Ejecuta 'gcc -o DesafioHashKRA app.c tabla_hash.c arbol_binario.c'
