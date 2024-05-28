@@ -3,12 +3,20 @@
 #include "headers/tabla_hash.h"
 #include "headers/arbol_binario.h"
 
+void hash();
+
 int main(int argc, char *argv[]) {
     
-    list * lista = NULL;
+    hash();
+	
+	return 0;
+}
+
+void hash(){
+	list * lista = NULL;
 	list * cadena[TAM];
 
-	int N = 10000;
+	int N = 1000000;
 
 	for(int i=0; i<N; i++){
 		list * nuevo = (list *)malloc(sizeof(list));
@@ -18,8 +26,7 @@ int main(int argc, char *argv[]) {
 	}
 
     inicializarHash(lista, N, cadena);
-    //printHash();
-
+    //printHash(cadena);
 
 	int valor;
 	printf("Valor a buscar: ");
@@ -31,7 +38,4 @@ int main(int argc, char *argv[]) {
 	else{
 		printf("Valor no encontrado.\n");
 	}
-
-
-	return 0;
 }
