@@ -9,9 +9,9 @@ typedef struct list{
 	struct list * sig;
 }list;
 
-void inicializarHash(list * lista, int N);
-void insertHashNode(int valor);
-void printHash();
-int searchHash(int valor);
+void inicializarHash(list * lista, int N, list *cadena[]);
+void insertHashNode(int valor, list *cadena[]);
+void printHash(list *cadena[]);
+int searchHash(int valor, list *cadena[]);
 
 #endif /* TABLA_HASH_H */

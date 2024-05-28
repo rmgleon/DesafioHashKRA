@@ -3,9 +3,8 @@
 #include <stdlib.h>
 
 
-list * cadena[TAM];
 
-void insertHashNode(int valor){
+void insertHashNode(int valor, list *cadena[]){
     list * nuevoNodo = (list*)malloc(sizeof(list));
 	nuevoNodo->dato = valor;
 	nuevoNodo->sig = NULL;
@@ -23,22 +22,22 @@ void insertHashNode(int valor){
 	}
 }
 
-void inicializarHash(list * lista, int N){
+void inicializarHash(list * lista, int N, list *cadena[]){
 	//Inicializa la tabla Hash en NULL
 	for(int i=0; i<TAM; i++){
 		cadena[i] = NULL;
 	}
 	list * temp = lista;
 	for(int i=0; i<N; i++){
-		insertHashNode(temp->dato); 
+		insertHashNode(temp->dato, cadena); 
 		temp = temp->sig;
 	}
 }
 
-void printHash(){
+void printHash(list *cadena[]){
 	for (int i=0 ; i<TAM; i++){
 	struct list * temp = cadena [i];
-	printf ( "cadena[%d]->", i);
+	printf ( "*cadena[%d]->", i);
 		while (temp){
 			printf ( "%d->", temp->dato);
 			temp = temp->sig;
@@ -47,7 +46,7 @@ void printHash(){
 	}
 }
 
-int searchHash(int valor){
+int searchHash(int valor, list *cadena[]){
 	int clave = valor % TAM;
 	list * temp = cadena [clave];
 	while(temp){

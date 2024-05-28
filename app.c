@@ -6,6 +6,7 @@
 int main(int argc, char *argv[]) {
     
     list * lista = NULL;
+	list * cadena[TAM];
 
 	int N = 10000;
 
@@ -16,7 +17,7 @@ int main(int argc, char *argv[]) {
 		lista = nuevo;
 	}
 
-    inicializarHash(lista, N);
+    inicializarHash(lista, N, cadena);
     //printHash();
 
 
@@ -24,7 +25,7 @@ int main(int argc, char *argv[]) {
 	printf("Valor a buscar: ");
 	scanf("%d", &valor);
 	
-	if(searchHash(valor) == 1){
+	if(searchHash(valor,cadena) == 1){
 		printf("Valor encontrado\n");
 	}
 	else{
