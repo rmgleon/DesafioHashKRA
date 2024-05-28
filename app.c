@@ -9,29 +9,31 @@ void hash();
 void arbol();
 
 int main(int argc, char *argv[]) {
-
-	int = op
+	list * lista = NULL;
+	list * cadena[TAM];
+	
+	int op;
 	
 	while(1){
-		printf("\n 1_----\n2_-----\n3_-------\n4_exit");
-		printf("\n select options ->\t");
+		printf("\n1- Hash \n2- Nan\n3- FHash\n4- Exit");
+		printf("\nOpcion: ");
 		scanf("%d", &op);
 		fflush(stdin);
 		
 		switch(op){
 			case 1:{ 
-				hash();
+				hash(cadena, lista);
 				//arbol();
 			}break;
-			case 3:{	
-				FHash ( list *cadena[] );
+			case 3:{
+				FHash(cadena);
 			}break;
 			case 4:{
 				printf("\n -- exit success --");
 				exit(0);
 			}break;
 			default:{
-				printf("\n -- error input, select 1-4 --");
+				printf("\n -- bad input, select 1-4 --");
 			}break;
 		}
 	}
@@ -48,10 +50,9 @@ void arbol(){
 	addTreeNode(&raiz,valor);
 }
 
-void hash(){
+void hash(list *cadena[], list *lista){
 	printf("-- Hash --");
-	list * lista = NULL;
-	list * cadena[TAM];
+	
 
 	clock_t start, end;
     double cpu_time_used;

@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "headers/busqueda_hash.h"
+#include <time.h>
+
 #include "headers/tabla_hash.h"
+#include "headers/busqueda_hash.h"
 
 
 // list * cadena [TAM];
@@ -42,6 +44,6 @@ void FHash ( list *cadena[] ){
         	printf("Tomo %f ms.\n", cpu_time_used*60);
     }
     else{
-        	printf("Tomo %f segundoss.\n", cpu_time_used);
+        	printf("Tomo %f segundos.\n", cpu_time_used);
     }
 }
