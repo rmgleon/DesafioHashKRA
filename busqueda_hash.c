@@ -1,4 +1,5 @@
-
+#include <stdio.h>
+#include <stdlib.h>
 #include "headers/busqueda_hash.h"
 #include "headers/tabla_hash.h"
 
@@ -17,12 +18,12 @@ void FHash ( list *cadena[] ){
 
     while (Find){
 
-        if (Fnd ->datos == valor){
+        if (Find ->dato == valor){
 
             printf("\n-- value found --");
         }
 
-    Find = Find -> siguiente ;
+    Find = Find -> sig ;
 
     }
 
