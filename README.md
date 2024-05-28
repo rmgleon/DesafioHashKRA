@@ -11,7 +11,7 @@ Comparar la rapidez y eficiencia de búsqueda entre tres algoritmos
 ### Instrucciones para compilar
 
 #### Cmake
-1. Crea una carpeta llamada build y entra a ella
+1. Crea una carpeta llamada build y ejecuta 'cd build'
 2. Ejecuta 'cmake ..'
 3. Ejecuta 'cmake --build .'
 
