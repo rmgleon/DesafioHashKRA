@@ -9,10 +9,32 @@ void hash();
 void arbol();
 
 int main(int argc, char *argv[]) {
-    
-    hash();
-	//arbol();
 
+	int = op
+	
+	while(1){
+		printf("\n 1_----\n2_-----\n3_-------\n4_exit");
+		printf("\n select options ->\t");
+		scanf("%d", &op);
+		fflush(stdin);
+		
+		switch(op){
+			case 1:{ 
+				hash();
+				//arbol();
+			}break;
+			
+			case 4:{
+				printf("\n -- exit success --");
+				exit(0);
+			}break;
+
+			default:{
+				printf("\n --error input, select 1-4");
+			}break;
+		}
+	}
+   
 	return 0;
 }
 
