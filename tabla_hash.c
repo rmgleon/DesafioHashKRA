@@ -14,11 +14,17 @@ void insertHashNode(int valor, list *cadena[]){
 		cadena[clave] = nuevoNodo;
 	}
 	else{
+		/* 	forma lentisima de cargar los datos. Tiene que recorrer
+			hasta el final antes de que pueda cargar un elemento
 		list * temp = cadena[clave];
 		while(temp->sig != NULL){
 			temp = temp->sig;
 		}
-		temp->sig = nuevoNodo;
+		temp->sig = nuevoNodo;*/
+
+		// Carga como se carga una lista normal
+		nuevoNodo->sig=cadena[clave];
+		cadena[clave]=nuevoNodo;
 	}
 }
 

@@ -25,6 +25,7 @@ void arbol(){
 }
 
 void hash(){
+	printf("-- Hash --");
 	list * lista = NULL;
 	list * cadena[TAM];
 
@@ -55,6 +56,7 @@ void hash(){
 		
 		printf("Valor a buscar: ");
 		scanf("%d", &valor);
+		
 		
 		if(searchHash(valor,cadena) == 1){
 			printf("Valor encontrado\n");
