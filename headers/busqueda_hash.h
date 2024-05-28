@@ -1,6 +1,6 @@
 #ifndef BUSQUEDA_HASH_H
 #define BUSQUEDA_HASH_H
 
-void FHash ();
+void FHash ( list *cadena[] );
 
 #endif /* BUSQUEDA_HASH_H */
