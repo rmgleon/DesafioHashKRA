@@ -8,7 +8,7 @@ typedef struct tree{
 }tree;
 
 tree *createTreeNode (int val);
-tree *addTreeNode (tree **arbol, int val);
+void addTreeNode (tree **arbol, int val);
 void showTree (tree *arbol);
 tree *findTreeNode (tree *arbol, int bus);
 

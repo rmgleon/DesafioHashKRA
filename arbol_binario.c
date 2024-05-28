@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+// Funcion subordinada a addTreeNode, crea un nodo y le asigna
+// un valor especificado.
+// Se ocupa dentro de addTreeNode y no deberia usarse fuera de el
 tree *createTreeNode (int val){
 	tree *nuevonodo;
 	nuevonodo=(tree*)malloc(sizeof (tree));
@@ -11,14 +14,17 @@ tree *createTreeNode (int val){
 	return nuevonodo;
 }
 
-tree *addTreeNode (tree **arbol, int val){
+// Inicializa o le añade un nodo al arbol binario.
+void addTreeNode (tree **arbol, int val){
+	// Caso 1: El  nodo esta vacio  || El arbol esta vacio
 	if (*arbol==NULL)
-		return createTreeNode (val);
+		*arbol = createTreeNode(val);
+	// Caso 2: El valor a ingresar es mayor
 	if ((*arbol)->dato<val)
-		(*arbol)->right=addTreeNode(&(*arbol)->right,val);
+		addTreeNode(&(*arbol)->right,val);
+	// Caso 3: El valor a ingresar es menor 
 	if ((*arbol)->dato>val)
-		(*arbol)->left=addTreeNode (&(*arbol)->left,val);
-	return *arbol;
+		addTreeNode(&(*arbol)->left,val);
 }
 
 void showTree (tree *arbol){
