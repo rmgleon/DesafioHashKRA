@@ -3,7 +3,7 @@
 #include <time.h>
 #include "headers/tabla_hash.h"
 #include "headers/arbol_binario.h"
-#include "headers/busqyeda_hash.h"
+#include "headers/busqueda_hash.h"
 
 void hash();
 void arbol();
