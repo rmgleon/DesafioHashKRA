@@ -67,10 +67,17 @@ void hash(){
 	}
 
     inicializarHash(lista, N, cadena);
-	end = clock();
-
+    end = clock();				
 	cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-	printf("La carga de elementos tardo %f segundos.\n", cpu_time_used);
+    if(cpu_time_used >=60){
+        	printf("Tomo %f minutos.\n", cpu_time_used/60);
+    }
+    else  if(cpu_time_used <=0){
+        	printf("Tomo %f ms.\n", cpu_time_used*60);
+    }
+    else{
+        	printf("Tomo %f segundoss.\n", cpu_time_used);
+    }
 
 
     //printHash(cadena);
@@ -88,8 +95,16 @@ void hash(){
 		else{
 			printf("Valor no encontrado.\n");
 		}
-		end = clock();
-		cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-		printf("Tomo %f segundos.\n", cpu_time_used);
+    end = clock();				
+	cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+    if(cpu_time_used >=60){
+        	printf("Tomo %f minutos.\n", cpu_time_used/60);
+    }
+    else  if(cpu_time_used <=0){
+        	printf("Tomo %f ms.\n", cpu_time_used*60);
+    }
+    else{
+        	printf("Tomo %f segundoss.\n", cpu_time_used);
+    }
 	}while(valor!=-1);
 }
