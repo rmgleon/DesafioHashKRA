@@ -5,7 +5,7 @@
 
 // list * cadena [TAM];
 
-void FHash (){
+void FHash ( list *cadena[] ){
 
     long long int GB = 1073741824,clave, valor;
     printf("valor -> \t");
