@@ -6,12 +6,14 @@
 #include "headers/tabla_hash_mod.h"
 #include "headers/arreglo_binario.h"
 
+#define ELEMENTOS 1000
+
 
 // Genera un arbol, lo llena de elementos, y permite buscar
 // elementos dentro de el definidos por el usuario
 // Muestra el tiempo que tardo en la busqueda
 void arbol();
-void arregloBusquedaBinaria(int arr[], int n);
+void arregloBusquedaBinaria(int arr[], int n, int arr2[]);
 
 // Toma un hashmap (cadena) y una lista auxiliar.
 // Usa la lista para llenar a cadena de elementos
@@ -23,80 +25,12 @@ void hashMod(list *cadenaMod[], list *lista);
 
 int main(int argc, char *argv[]) {
     srand(time(NULL));
-	
-	// Arreglo para arregloBusquedaBinaria
-	int arreglo[1000000];
-	// Lista auxiliar de hash
-	list * lista = NULL;
-	// Hashmap de hash
-	list * cadena[TAM];
-	// Hashmap de hashMod
-	list * cadenaMod[TAM];
-	// Elementos de la lista auxiliar de hash
-	int N = 1000000;
-	
-	// Llena la lista auxiliar con elementos ordenados
-	for(int i=0; i<N; i++){
-		list * nuevo = (list *)malloc(sizeof(list));
-		nuevo->dato = i;
-		nuevo->sig = lista;
-		lista = nuevo;
-	}
-
-	inicializarHash(lista, N, cadena);
-	inicializarHashMod(lista, N, cadenaMod);
-	createOrderedArray(arreglo,N);
-	
-	
-	int op;
-	
-	while(1){
-		printf("\n1- Hash\n2- Arbol\n3- FHash\n4- Exit");
-		printf("\nOpcion: ");
-		scanf("%d", &op);
-		fflush(stdin);
-		
-		switch(op){
-			case 1:{ 
-				hash(cadena, lista);
-			}break;
-			case 2:{
-				arbol();
-			}break;
-			case 3:{
-				hashMod(cadenaMod, lista);
-			}break;
-			case 4:{
-				printf("\n -- exit success --");
-				exit(0);
-			}break;
-			case 5:{
-				arregloBusquedaBinaria(arreglo,N);
-			}break;
-			default:{
-				printf("\n -- bad input, select 1-4 --");
-			}break;
-		}
-	}
-   
-	return 0;
-}
-
-void arbol(){
-
 	// Genera el arbol y un arreglo auxiliario para
 	// rellenar al arbol
 	tree *raiz;
 	int array[1000000];
-
-	printf("-- Arbol --\n");
-
     int range = 1000000;
-    int numbers[1000000];
-    if (numbers == NULL) {
-        fprintf(stderr, "Error al inicializar el arreglo\n");
-		return;
-    }
+    int *numbers = malloc((range + 1) * sizeof(int));
 
     // Inicializa el arreglo con valores consecutivos
     for (int i = 0; i <= range; i++) {
@@ -114,34 +48,96 @@ void arbol(){
     // Le tira una bomba atomica al arreglo auxiliar
     free(numbers);
 
+
+	// Arreglo para arregloBusquedaBinaria
+	int arreglo[1000000];
+	int elementosABuscar[ELEMENTOS];
+
+	// Lista auxiliar de hash
+	list * lista = NULL;
+	// Hashmap de hash
+	list * cadena[TAM];
+	// Hashmap de hashMod
+	list * cadenaMod[TAM];
+	// Elementos de la lista auxiliar de hash
+	int N = 1000000;
+
+	// Elementos aleatorios a buscar
+	for(int i=0;i<ELEMENTOS;i++){
+		elementosABuscar[i]=rand()%N;
+	}
+	
+	// Llena la lista auxiliar con elementos ordenados
+	for(int i=0; i<N; i++){
+		list * nuevo = (list *)malloc(sizeof(list));
+		nuevo->dato = i;
+		nuevo->sig = lista;
+		lista = nuevo;
+	}
+
+	inicializarHash(lista, N, cadena);
+	inicializarHashMod(lista, N, cadenaMod);
+	createOrderedArray(arreglo,N);
+	
+	
+	int op;
+	
+	while(1){
+		printf("\n1- Busqueda Hash\n2- Busqueda Arbol\n3- Busqueda Hash del alumno\n4- Busqueda Arreglo Binaria\n5- Exit");
+		printf("\nOpcion: ");
+		scanf("%d", &op);
+		fflush(stdin);
+		
+		switch(op){
+			case 1:{ 
+				hash(cadena, lista);
+			}break;
+			case 2:{
+				arbol(raiz, elementosABuscar);
+			}break;
+			case 3:{
+				hashMod(cadenaMod, lista);
+			}break;
+			case 4:{
+				arregloBusquedaBinaria(arreglo,N,elementosABuscar);
+			}break;
+			case 5:{
+				printf("\n -- exit success --");
+				exit(0);
+			}break;
+			default:{
+				printf("\n -- bad input, select 1-4 --");
+			}break;
+		}
+	}
+   
+	return 0;
+}
+
+void arbol(tree *raiz, int arr[]){
+
 	clock_t start, end;
-    double cpu_time_used;
+    double cpu_time_used=0;
 	int valor;
 	tree *aux;
-	do{
-		printf("Valor a buscar: ");
-		scanf("%d", &valor);
+
+	int encontrados=0;
+	double average_time=0;
+
+	
+	for(int i=0;i<ELEMENTOS;i++){
+		valor=arr[i];
 		start = clock();
-	
-
 		aux=findTreeNode(raiz,valor);
-		if(aux->dato == valor){
-			printf("Valor encontrado\n");
-		}
-		else{
-			printf("Valor no encontrado.\n");
-		}
-
 		end = clock();
-		cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-		printf("Tomo %f milisegundos.\n", cpu_time_used*1000);
+		cpu_time_used = cpu_time_used + ((double) (end - start)) / CLOCKS_PER_SEC;
 		
-
-	}while(valor!=-1);
-
-
-
+	}
 	
+	
+	
+	average_time=cpu_time_used;
+	printf("Tomo %f segundos.\nEl promedio fue %f milisegundos.\n", cpu_time_used, average_time);
 }
 
 void hash(list *cadena[], list *lista){
@@ -218,27 +214,25 @@ void hashMod(list *cadenaMod[], list *lista){
 	}while(valor!=-1);
 }
 
-void arregloBusquedaBinaria(int arr[], int n){
+void arregloBusquedaBinaria(int arr[], int n, int arr2[]){
 	clock_t start, end;
     double cpu_time_used;
 	int valor;
-	do{
+	double average_time;
+
+	for(int i=0;i<ELEMENTOS;i++){
+		valor=arr2[i];
 		start = clock();
-		
-		printf("Valor a buscar: ");
-		scanf("%d", &valor);
-		
-		if(binarySearch(arr,n,valor) != -1){
-			printf("Valor encontrado\n");
-		}
-
-		else{
-			printf("Valor no encontrado.\n");
-		}
-
+		binarySearch(arr,n,valor);
 		end = clock();
-		cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-		printf("Tomo %f milisegundos.\n", cpu_time_used*1000);
+		cpu_time_used = cpu_time_used + ((double) (end - start)) / CLOCKS_PER_SEC;
+	
+	}
 
-	}while(valor!=-1);
+
+	
+	average_time=cpu_time_used;
+	printf("Tomo %f segundos.\nEl promedio fue %f milisegundos.\n", cpu_time_used, average_time);
+
+	
 }
