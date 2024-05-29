@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
 			}break;
 			case 5:{
 				arregloBusquedaBinaria(arreglo,N);
-			}
+			}break;
 			default:{
 				printf("\n -- bad input, select 1-4 --");
 			}break;
@@ -138,6 +138,8 @@ void arbol(){
 		
 
 	}while(valor!=-1);
+
+
 
 	
 }

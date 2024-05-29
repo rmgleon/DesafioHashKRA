@@ -56,7 +56,7 @@ tree *findTreeNode (tree *arbol, int bus){
 
 // Toma un arreglo ordenado y su tamaño.
 // Lo mueve de forma aleatoria para garantizar
-// Que sus elementos no sean consecutivos
+// que sus elementos no sean consecutivos
 void shuffle(int *arreglo, int n) {
     for (int i = n - 1; i > 0; i--) {
         // Eligue un indice aleatorio de 0 a i
@@ -68,3 +68,6 @@ void shuffle(int *arreglo, int n) {
     }
 }
 
+void deleteTree(tree *arbol){
+	
+}

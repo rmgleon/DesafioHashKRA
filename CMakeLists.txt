@@ -20,6 +20,7 @@ set(SOURCES
     arbol_binario.c
     tabla_hash.c
     tabla_hash_mod.c
+    arreglo_binario.c
 )
 
 # Add the executable
