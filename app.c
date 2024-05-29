@@ -92,7 +92,7 @@ void arbol(){
 	printf("-- Arbol --\n");
 
     int range = 1000000;
-    int *numbers = malloc((range + 1) * sizeof(int));
+    int numbers[1000000];
     if (numbers == NULL) {
         fprintf(stderr, "Error al inicializar el arreglo\n");
 		return;
