@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-// Funcion subordinada a addTreeNode, crea un nodo y le asigna
-// un valor especificado.
+// Funcion subordinada a addTreeNode
+// Toma valor y se lo asigna a un nodo
+// el cual lo devuelve.
 // Se ocupa dentro de addTreeNode y no deberia usarse fuera de el
 tree *createTreeNode (int val){
 	tree *nuevonodo;
@@ -14,7 +15,8 @@ tree *createTreeNode (int val){
 	return nuevonodo;
 }
 
-// Inicializa o le añade un nodo al arbol binario.
+// Toma un arbol y un valor y lo añade como un nodo.
+// Si el arbol esta vacio, se le asigna un nodo. 
 void addTreeNode (tree **arbol, int val){
 	// Caso 1: El  nodo esta vacio  || El arbol esta vacio
 	if (*arbol==NULL)
@@ -27,6 +29,7 @@ void addTreeNode (tree **arbol, int val){
 		addTreeNode(&(*arbol)->left,val);
 }
 
+// Toma un arbol y lo muestra un arbol de forma recursiva
 void showTree (tree *arbol){
 	if (arbol==NULL)
 		return;
@@ -35,18 +38,33 @@ void showTree (tree *arbol){
 	showTree ((arbol)->right);
 }
 
+
+// Toma un arbol y valor y lo encuentra de forma recursiva.
+// Devuelve el arbol encontrado
 tree *findTreeNode (tree *arbol, int bus){
+	// Caso 1: El nodo actual es el de bus
 	if (arbol->dato==bus){
 		return arbol;
+	// Caso 2: El valor del nodo actual es menor a bus 
 	}else if (bus < arbol->dato && arbol->left!=NULL )
 		return findTreeNode ( arbol->left, bus);
+	// Caso 3: El valor del nodo actual es mayor a bus
 	else if (bus > arbol->dato && arbol->right!=NULL)
 		return findTreeNode ( arbol->right, bus);
 	return arbol;
 }
 
-/* Solo para que compile. Despues lo elimino
-int main(){
-    return 0;
+// Toma un arreglo ordenado y su tamaño.
+// Lo mueve de forma aleatoria para garantizar
+// Que sus elementos no sean consecutivos
+void shuffle(int *arreglo, int n) {
+    for (int i = n - 1; i > 0; i--) {
+        // Eligue un indice aleatorio de 0 a i
+        int j = rand() % (i + 1);
+        // Intercambia los valores de forma aleatoria
+        int temp = arreglo[i];
+        arreglo[i] = arreglo[j];
+        arreglo[j] = temp;
+    }
 }
-*/
+

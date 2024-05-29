@@ -2,8 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
-
 void insertHashNode(int valor, list *cadena[]){
     list * nuevoNodo = (list*)malloc(sizeof(list));
 	nuevoNodo->dato = valor;
@@ -63,3 +61,4 @@ int searchHash(int valor, list *cadena[]){
 	}
 	return 0 ;
 }
+

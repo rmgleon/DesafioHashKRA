@@ -11,7 +11,6 @@ typedef struct list{
 
 void inicializarHash(list * lista, int N, list *cadena[]);
 void insertHashNode(int valor, list *cadena[]);
-void printHash(list *cadena[]);
 int searchHash(int valor, list *cadena[]);
 
 #endif /* TABLA_HASH_H */

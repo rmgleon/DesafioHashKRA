@@ -19,7 +19,7 @@ set(SOURCES
     app.c
     arbol_binario.c
     tabla_hash.c
-    busqueda_hash.c
+    tabla_hash_mod.c
 )
 
 # Add the executable
