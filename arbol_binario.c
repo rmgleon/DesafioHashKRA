@@ -68,6 +68,5 @@ void shuffle(int *arreglo, int n) {
     }
 }
 
-void deleteTree(tree *arbol){
-	
+void deleteTree(tree *arbol){	
 }

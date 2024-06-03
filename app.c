@@ -6,6 +6,8 @@
 #include "headers/tabla_hash_mod.h"
 #include "headers/arreglo_binario.h"
 
+// SOLO ANDA EN TempleOS
+
 #define ELEMENTOS 1000
 
 
@@ -20,8 +22,8 @@ void arregloBusquedaBinaria(int arr[], int n, int arr2[]);
 // Permite la busqueda de elementos dentro del hashmap
 // deifindos por el usuario
 // Muestra el tiempo que tardo en la busqueda
-void hash(list *cadena[], list *lista);
-void hashMod(list *cadenaMod[], list *lista);
+void hash(list *cadena[], list *lista, int arr[]);
+void hashMod(list *cadenaMod[], list *lista, int arr[]);
 
 int main(int argc, char *argv[]) {
     srand(time(NULL));
@@ -90,13 +92,13 @@ int main(int argc, char *argv[]) {
 		
 		switch(op){
 			case 1:{ 
-				hash(cadena, lista);
+				hash(cadena, lista,elementosABuscar);
 			}break;
 			case 2:{
 				arbol(raiz, elementosABuscar);
 			}break;
 			case 3:{
-				hashMod(cadenaMod, lista);
+				hashMod(cadenaMod, lista,elementosABuscar);
 			}break;
 			case 4:{
 				arregloBusquedaBinaria(arreglo,N,elementosABuscar);
@@ -137,12 +139,10 @@ void arbol(tree *raiz, int arr[]){
 	
 	
 	average_time=cpu_time_used;
-	printf("Tomo %f segundos.\nEl promedio fue %f milisegundos.\n", cpu_time_used, average_time);
+	printf("- Arbol - Tomo %f segundos.\nEl promedio fue %f milisegundos.\n", cpu_time_used, average_time);
 }
 
-void hash(list *cadena[], list *lista){
-	printf("-- Hash --");
-	
+void hash(list *cadena[], list *lista, int arr[]){
 	clock_t start, end;
     double cpu_time_used;
 
@@ -154,8 +154,8 @@ void hash(list *cadena[], list *lista){
 	printf("Tomo %f milisegundos.\n", cpu_time_used*1000);
 	*/
     //printHash(cadena);
-	int valor=0;
-	do{
+	
+	/*do{
 		printf("Valor a buscar: ");
 		scanf("%d", &valor);
 		start = clock();
@@ -174,44 +174,44 @@ void hash(list *cadena[], list *lista){
 		printf("Tomo %f milisegundos.\n", cpu_time_used*1000);
 
 	}while(valor!=-1);
+	*/
+	int valor;
+	double average_time;
+
+	for(int i=0;i<ELEMENTOS;i++){
+		valor=arr[i];
+		start = clock();
+		searchHash(valor,cadena);
+		end = clock();
+		cpu_time_used = cpu_time_used + ((double) (end - start)) / CLOCKS_PER_SEC;
+	
+	}
+	average_time=cpu_time_used;
+	printf("- Hash - Tomo %f segundos.\nEl promedio fue %f milisegundos.\n", cpu_time_used, average_time);
+
+
+
+
 }
 
-void hashMod(list *cadenaMod[], list *lista){
-
-	printf("-- Hash Mod--");
-	
+void hashMod(list *cadenaMod[], list *lista, int arr[]){
 	clock_t start, end;
     double cpu_time_used;
 
-	/*
-	start = clock();
-    
-    end = clock();
-	cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-	printf("Tomo %f segundos.\n", cpu_time_used);
-	*/
-
-    //printHash(cadena);
 	int valor;
-	do{
+	double average_time;
+
+	for(int i=0;i<ELEMENTOS;i++){
+		valor=arr[i];
 		start = clock();
-		
-		printf("Valor a buscar: ");
-		scanf("%d", &valor);
-		
-		if(searchHashMod(valor,cadenaMod) == 1){
-			printf("Valor encontrado\n");
-		}
-
-		else{
-			printf("Valor no encontrado.\n");
-		}
-
+		searchHashMod(valor,cadenaMod);
 		end = clock();
-		cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-		printf("Tomo %f milisegundos.\n", cpu_time_used*1000);
+		cpu_time_used = cpu_time_used + ((double) (end - start)) / CLOCKS_PER_SEC;
+	
+	}
+	average_time=cpu_time_used;
+	printf("- Hash mod - Tomo %f segundos.\nEl promedio fue %f milisegundos.\n", cpu_time_used, average_time);
 
-	}while(valor!=-1);
 }
 
 void arregloBusquedaBinaria(int arr[], int n, int arr2[]){
@@ -226,13 +226,11 @@ void arregloBusquedaBinaria(int arr[], int n, int arr2[]){
 		binarySearch(arr,n,valor);
 		end = clock();
 		cpu_time_used = cpu_time_used + ((double) (end - start)) / CLOCKS_PER_SEC;
-	
+
 	}
 
-
-	
 	average_time=cpu_time_used;
-	printf("Tomo %f segundos.\nEl promedio fue %f milisegundos.\n", cpu_time_used, average_time);
+	printf("- Busqueda Binaria - Tomo %f segundos.\nEl promedio fue %f milisegundos.\n", cpu_time_used, average_time);
 
 	
 }
