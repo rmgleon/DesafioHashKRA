@@ -1,1 +1,0 @@
-/usr/bin/cc CMakeFiles/DesafioHashKRA.dir/app.c.o CMakeFiles/DesafioHashKRA.dir/arbol_binario.c.o CMakeFiles/DesafioHashKRA.dir/tabla_hash.c.o CMakeFiles/DesafioHashKRA.dir/tabla_hash_mod.c.o CMakeFiles/DesafioHashKRA.dir/arreglo_binario.c.o -o DesafioHashKRA
