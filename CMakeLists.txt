@@ -21,6 +21,7 @@ set(SOURCES
     tabla_hash.c
     tabla_hash_mod.c
     arreglo_binario.c
+    arreglo_interpolacion.c
 )
 
 # Add the executable

@@ -6,13 +6,11 @@
 #include "headers/arbol_binario.h"
 #include "headers/tabla_hash_mod.h"
 #include "headers/arreglo_binario.h"
-
-// SOLO ANDA EN TempleOS
+#include "headers/arreglo_interpolacion.h"
 
 #define ELEMENTOS 1000
 
 // Funcion para generar gráfico
-
 void generateGnuplotScript(const char *filename, double *values, int numValues) {
     FILE *file = fopen(filename, "w");
     if (!file) {
@@ -28,15 +26,15 @@ void generateGnuplotScript(const char *filename, double *values, int numValues) 
     fprintf(file, "set boxwidth 0.7\n");
     fprintf(file, "set ylabel 'Tiempo (μs)'\n");
 	fprintf(file, "set yrange [0:2.0000]\n"); //Modificar en caso de que en el grafico una de las busquedas sobrepase el valor
-	fprintf(file, "set ytics 0.2000\n"); // This will set y-axis ticks at every 0.1 interval
+	fprintf(file, "set ytics 0.2000\n"); // Intervalo de Y (cada cuantos numeros marca una linea)
     fprintf(file, "set xtics rotate by -45\n");
 	fprintf(file, "set grid\n");
 	fprintf(file, "set grid linecolor rgb '#808080' linewidth 1.5 linetype 1\n");
-    fprintf(file, "set xtics ('Promedio Hash' 0, 'Promedio Arbol' 1, 'Promedio HashMod' 2, 'Promedio Bus binaria' 3)\n");
+    fprintf(file, "set xtics ('Promedio Hash' 0, 'Promedio Arbol' 1, 'Promedio HashMod' 2, 'Promedio Bus binaria' 3, 'Promedio Bus interpolacion' 4)\n");
 
 	fprintf(file, "plot '-' using 2:xtic(1) title 'Tiempo Promedio'\n");
 
-    const char *labels[] = {"PromHash", "PromArbol", "PromHashMod", "PromBusBin"};
+    const char *labels[] = {"PromHash", "PromArbol", "PromHashMod", "PromBusBin", "PromBusInt"};
     for (int i = 0; i < numValues; i++) {
         fprintf(file, "%s %f\n", labels[i], values[i]);
     }
@@ -45,17 +43,27 @@ void generateGnuplotScript(const char *filename, double *values, int numValues) 
     fclose(file);
 }
 
-// Genera un arbol, lo llena de elementos, y permite buscar
+// Toma un arbol y permite buscar
 // elementos dentro de el definidos por el usuario
-// Muestra el tiempo que tardo en la busqueda
+// Devuelve el tiempo que tardo en la busqueda
 double arbol(tree *raiz, int arr);
-double arregloBusquedaBinaria(int arr[], int n, int arr2);
+
+// Toma un arreglo, su tamaño, y el elemento a buscar
+// Lo busca usando busqueda binaria
+// Devuelve el tiempo que tardo en la busqueda
+double arregloBusquedaBinaria(int arr[], int tam, int arr2);
+
+
+// Toma un arreglo, su tamaño, y el elemento a buscar
+// Lo busca usando busqueda por interpolacion
+// Devuelve el tiempo que tardo en la busqueda
+double arregloBusquedaInterpolacion(int arr[], int tam, int arr2);
 
 // Toma un hashmap (cadena) y una lista auxiliar.
 // Usa la lista para llenar a cadena de elementos
 // Permite la busqueda de elementos dentro del hashmap
 // deifindos por el usuario
-// Muestra el tiempo que tardo en la busqueda
+// Devuelve el tiempo que tardo en la busqueda
 double hash(list *cadena[], int arr);
 double hashMod(list *cadenaMod[], int arr);
 
@@ -65,16 +73,17 @@ int main(int argc, char *argv[]) {
 	// rellenar al arbol
 	tree *raiz = NULL;
     int range = 1000000;
-
     int *numbers = (int *)malloc((range + 1) * sizeof(int));
 
 
-    // Inicializa el arreglo con valores consecutivos
+    // Inicializa el arreglo auxiliar del arbol
+	// con valores consecutivos
     for (int i = 0; i <= range; i++) {
         numbers[i] = i;
     }
 
-    // Randomiza el arreglo
+    // Randomiza las posiciones del arreglo de manera
+	// que sus miembros no sean consecutivos
     shuffle(numbers, range + 1);
 
 
@@ -86,18 +95,20 @@ int main(int argc, char *argv[]) {
     // Le tira una bomba atomica al arreglo auxiliar
    free(numbers);
 
-
-	// Arreglo para arregloBusquedaBinaria
+	// Arreglo para arregloBusquedaBinaria y arregloBusquedaInterpolacion
 	int arreglo[1000000];
 	//int elementosABuscar[ELEMENTOS];
 	int elementosABuscar;
 
 	// Lista auxiliar de hash
 	list * lista = NULL;
+
 	// Hashmap de hash
 	list * cadena[TAM];
+
 	// Hashmap de hashMod
 	list * cadenaMod[TAM];
+
 	// Elementos de la lista auxiliar de hash
 	int N = 1000000;
 
@@ -116,10 +127,13 @@ int main(int argc, char *argv[]) {
 
 
     double resultado;
+
+	// Valores de sumatoria de cada busqueda
 	double resultadoHash = 0;
 	double resultadoArbol = 0;
 	double resultadoHashMod = 0;
 	double resultadoBusBin = 0;
+	double resultadoBusInt = 0;
 
 	FILE *archivo;
 	archivo = fopen("resultado.csv", "w");
@@ -130,24 +144,34 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
+
+	// Valores de tiempo de cada busqueda individual, auxiliares para la sumatoria 
+	double resHash;
+	double resArbol;
+	double resHashMod;
+	double resBusBin;
+	double resBusInt;
+
    for (int i = 0; i < ELEMENTOS; i++) {
         elementosABuscar = rand() % N;
         fprintf(archivo, "%d;", elementosABuscar);
 
         // Obtener y almacenar resultados individuales
-        double resHash = hash(cadena, elementosABuscar);
-        double resArbol = arbol(raiz, elementosABuscar);
-        double resHashMod = hashMod(cadenaMod, elementosABuscar);
-        double resBusBin = arregloBusquedaBinaria(arreglo, N, elementosABuscar);
+        resHash = hash(cadena, elementosABuscar);
+        resArbol = arbol(raiz, elementosABuscar);
+        resHashMod = hashMod(cadenaMod, elementosABuscar);
+        resBusBin = arregloBusquedaBinaria(arreglo, N, elementosABuscar);
+		resBusInt = arregloBusquedaInterpolacion(arreglo, N, elementosABuscar);
 
         // Sumar resultados a los acumuladores
         resultadoHash += resHash;
         resultadoArbol += resArbol;
         resultadoHashMod += resHashMod;
         resultadoBusBin += resBusBin;
+		resultadoBusInt += resBusInt;
 
         // Escribir resultados individuales en el archivo
-        fprintf(archivo, "%f;%f;%f;%f\n", resHash, resArbol, resHashMod, resBusBin);
+        fprintf(archivo, "%f;%f;%f;%f;%f\n", resHash, resArbol, resHashMod, resBusBin, resBusInt);
     }
 
     fclose(archivo);
@@ -155,19 +179,21 @@ int main(int argc, char *argv[]) {
     printf("Archivo resultado.csv generado correctamente.\n");
 
 	// Arreglo con promedios para generar grafico de barras
-    const int numValues = 4;
+    const int numValues = 5;
     double values[numValues];
 
 	values[0] = resultadoHash/1000;
 	values[1] = resultadoArbol/1000;
 	values[2] = resultadoHashMod/1000;
 	values[3] = resultadoBusBin/1000;
+	values[4] = resultadoBusInt/1000;
 
     // Imprime los promedios de las busquedas en consola
     printf("Tiempo Promedio Busqueda Hash: \t\t%lf microsegundos\n", values[0]);
     printf("Tiempo Promedio Busqueda Arbol: \t%lf microsegundos\n", values[1]);
     printf("Tiempo Promedio Busqueda HashMod: \t%lf microsegundos\n", values[2]);
     printf("Tiempo Promedio Busqueda binaria: \t%lf microsegundos\n", values[3]);
+	printf("Tiempo Promedio Busqueda Interpolacion: \t%lf microsegundos\n", values[4]);
 
     //Comprueba si esta instalado Gnuplot
     if(!system("gnuplot --version") != 0){
@@ -201,9 +227,6 @@ double arbol(tree *raiz, int arr){
 		cpu_time_used = ((double) (end - start));
 
 		return cpu_time_used;
-
-	//printf("- Arbol - Tomo %f microsegundos.\n", cpu_time_used);
-
 }
 
 double hash(list *cadena[], int arr){
@@ -219,10 +242,6 @@ double hash(list *cadena[], int arr){
 		cpu_time_used = ((double) (end - start));
 
 	return cpu_time_used;
-
-	//printf("- Hash - Tomo %f microsegundos.\n", cpu_time_used);
-
-
 }
 
 double hashMod(list *cadenaMod[], int arr){
@@ -238,25 +257,31 @@ double hashMod(list *cadenaMod[], int arr){
 		cpu_time_used = ((double) (end - start));
 
 		return cpu_time_used;
-
-	//printf("- Hash mod - Tomo %f microsegundos.\n", cpu_time_used);
-
 }
 
-double arregloBusquedaBinaria(int arr[], int n, int arr2){
+double arregloBusquedaBinaria(int arr[], int tam, int arr2){
 	clock_t start, end;
     double cpu_time_used = 0;
 	int valor;
 
 		valor=arr2;
 		start = clock();
-		binarySearch(arr,n,valor);
+		binarySearch(arr,tam,valor);
 		end = clock();
 		cpu_time_used = ((double) (end - start));
 
 		return cpu_time_used;
+}
 
-	//printf("- Busqueda Binaria - Tomo %f microsegundos.\n", cpu_time_used);
+double arregloBusquedaInterpolacion(int arr[], int tam, int arr2){
+	clock_t start, end;
+    double cpu_time_used = 0;
+	int valor;
+		valor=arr2;
+		start = clock();
+		interpolationSearch(arr,tam,valor);
+		end = clock();
+		cpu_time_used = ((double) (end - start));
 
-	
+		return cpu_time_used;
 }

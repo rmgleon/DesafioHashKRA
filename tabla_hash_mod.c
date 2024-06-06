@@ -2,14 +2,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
-
 void insertHashNodeMod(int valor, list *cadenaMod[]){
     list * nuevoNodo = (list*)malloc(sizeof(list));
 	nuevoNodo->dato = valor;
 	nuevoNodo->sig = NULL;
-
-	int clave = valor * 31 % TAM;
+	// XOR bit a bit con un número primo para generar otro número
+	int clave = (valor ^ 2654435761) % TAM;
 	if(cadenaMod[clave] == NULL){
 		cadenaMod[clave] = nuevoNodo;
 	}
@@ -32,7 +30,7 @@ void inicializarHashMod(list * lista, int N, list *cadenaMod[]){
 }
 
 int searchHashMod(int valor, list *cadenaMod[]){
-	int clave = valor * 31 % TAM;
+	int clave = (valor ^ 2654435761) % TAM;
 	list * temp = cadenaMod[clave];
 	while(temp){
 		if(temp->dato == valor){	
@@ -42,4 +40,3 @@ int searchHashMod(int valor, list *cadenaMod[]){
 	}
 	return 0 ;
 }
-

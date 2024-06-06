@@ -3,8 +3,7 @@
 #include <stdio.h>
 
 // Funcion subordinada a addTreeNode
-// Toma valor y se lo asigna a un nodo
-// el cual lo devuelve.
+// Toma valor y se lo asigna a un nodo el cual devuelve.
 // Se ocupa dentro de addTreeNode y no deberia usarse fuera de el
 tree *createTreeNode (int val){
 	tree *nuevonodo;
@@ -21,10 +20,10 @@ void addTreeNode (tree **arbol, int val){
 	// Caso 1: El  nodo esta vacio  || El arbol esta vacio
 	if (*arbol==NULL)
 		*arbol = createTreeNode(val);
-	// Caso 2: El valor a ingresar es mayor
+	// Caso 2: El valor ingresado es mayor
 	if ((*arbol)->dato<val)
 		addTreeNode(&(*arbol)->right,val);
-	// Caso 3: El valor a ingresar es menor 
+	// Caso 3: El valor ingresado es menor 
 	if ((*arbol)->dato>val)
 		addTreeNode(&(*arbol)->left,val);
 }
@@ -40,23 +39,26 @@ void showTree (tree *arbol){
 
 
 // Toma un arbol y valor y lo encuentra de forma recursiva.
-// Devuelve el arbol encontrado
+// Devuelve el nodo encontrado. Si no encuentra el nodo,
+// devuelve el ultimo escaneado.
 tree *findTreeNode (tree *arbol, int bus){
 	// Caso 1: El nodo actual es el de bus
 	if (arbol->dato==bus){
 		return arbol;
-	// Caso 2: El valor del nodo actual es menor a bus 
+	// Caso 2: El valor del nodo actual es menor a bus
 	}else if (bus < arbol->dato && arbol->left!=NULL )
-		return findTreeNode ( arbol->left, bus);
+		findTreeNode ( arbol->left, bus);
 	// Caso 3: El valor del nodo actual es mayor a bus
 	else if (bus > arbol->dato && arbol->right!=NULL)
-		return findTreeNode ( arbol->right, bus);
+		findTreeNode ( arbol->right, bus);
 	return arbol;
 }
 
 // Toma un arreglo ordenado y su tamaño.
 // Lo mueve de forma aleatoria para garantizar
 // que sus elementos no sean consecutivos
+// Ya que no estamos usando un arbol AVL, se
+// usa para no terminar con un arbol degenerado
 void shuffle(int *arreglo, int n) {
     for (int i = n - 1; i > 0; i--) {
         // Eligue un indice aleatorio de 0 a i
@@ -66,7 +68,4 @@ void shuffle(int *arreglo, int n) {
         arreglo[i] = arreglo[j];
         arreglo[j] = temp;
     }
-}
-
-void deleteTree(tree *arbol){	
 }

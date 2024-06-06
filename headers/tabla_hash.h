@@ -2,7 +2,7 @@
 #ifndef TABLA_HASH_H
 #define TABLA_HASH_H
 
-#define TAM 100
+#define TAM 100000
 
 typedef struct list{
 	int dato;
