@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <string.h>
 #include "headers/tabla_hash.h"
 #include "headers/arbol_binario.h"
 #include "headers/tabla_hash_mod.h"
@@ -11,28 +12,60 @@
 #define ELEMENTOS 1000
 
 
+// Funcion para generar gráfico
+
+void generateGnuplotScript(const char *filename, double *values, int numValues) {
+    FILE *file = fopen(filename, "w");
+    if (!file) {
+        perror("No se pudo crear el archivo gnuplot script");
+        exit(EXIT_FAILURE);
+    }
+
+    fprintf(file, "set terminal pngcairo\n");
+    fprintf(file, "set output 'grafico.png'\n");
+    fprintf(file, "set title 'Tiempo promedio de busquedas'\n");
+    fprintf(file, "set style data histograms\n");
+    fprintf(file, "set style fill solid\n");
+    fprintf(file, "set boxwidth 0.5\n");
+    fprintf(file, "set ylabel 'Tiempo (s)'\n");
+	fprintf(file, "set yrange [0:0.0001]\n"); //Modificar en caso de que en el grafico una de las busquedas sobrepase el valor
+    fprintf(file, "set xtics rotate by -45\n");
+    fprintf(file, "set xtics ('Promedio Hash' 0, 'Promedio Arbol' 1, 'Promedio HashMod' 2, 'Promedio Bus binaria' 3)\n");
+
+	fprintf(file, "plot '-' using 2:xtic(1) title 'Tiempo Promedio'\n");
+
+    const char *labels[] = {"PromHash", "PromArbol", "PromHashMod", "PromBusBin"};
+    for (int i = 0; i < numValues; i++) {
+        fprintf(file, "%s %f\n", labels[i], values[i]);
+    }
+    fprintf(file, "e\n");
+	
+    fclose(file);
+}
+
 // Genera un arbol, lo llena de elementos, y permite buscar
 // elementos dentro de el definidos por el usuario
 // Muestra el tiempo que tardo en la busqueda
-void arbol();
-void arregloBusquedaBinaria(int arr[], int n, int arr2[]);
+double arbol(tree *raiz, int arr);
+double arregloBusquedaBinaria(int arr[], int n, int arr2);
 
 // Toma un hashmap (cadena) y una lista auxiliar.
 // Usa la lista para llenar a cadena de elementos
 // Permite la busqueda de elementos dentro del hashmap
 // deifindos por el usuario
 // Muestra el tiempo que tardo en la busqueda
-void hash(list *cadena[], list *lista, int arr[]);
-void hashMod(list *cadenaMod[], list *lista, int arr[]);
+double hash(list *cadena[], int arr);
+double hashMod(list *cadenaMod[], int arr);
 
 int main(int argc, char *argv[]) {
     srand(time(NULL));
 	// Genera el arbol y un arreglo auxiliario para
 	// rellenar al arbol
-	tree *raiz;
-	int array[1000000];
+	tree *raiz = NULL;
     int range = 1000000;
-    int *numbers = malloc((range + 1) * sizeof(int));
+
+    int *numbers = (int *)malloc((range + 1) * sizeof(int));
+
 
     // Inicializa el arreglo con valores consecutivos
     for (int i = 0; i <= range; i++) {
@@ -42,18 +75,20 @@ int main(int argc, char *argv[]) {
     // Randomiza el arreglo
     shuffle(numbers, range + 1);
 
+
     // Añade los numeros del arreglo al arbol
     for (int i = 0; i <= range; i++) {
         addTreeNode(&raiz, numbers[i]);
     }
 
     // Le tira una bomba atomica al arreglo auxiliar
-    free(numbers);
+   free(numbers);
 
 
 	// Arreglo para arregloBusquedaBinaria
 	int arreglo[1000000];
-	int elementosABuscar[ELEMENTOS];
+	//int elementosABuscar[ELEMENTOS];
+	int elementosABuscar;
 
 	// Lista auxiliar de hash
 	list * lista = NULL;
@@ -64,10 +99,6 @@ int main(int argc, char *argv[]) {
 	// Elementos de la lista auxiliar de hash
 	int N = 1000000;
 
-	// Elementos aleatorios a buscar
-	for(int i=0;i<ELEMENTOS;i++){
-		elementosABuscar[i]=rand()%N;
-	}
 	
 	// Llena la lista auxiliar con elementos ordenados
 	for(int i=0; i<N; i++){
@@ -80,157 +111,150 @@ int main(int argc, char *argv[]) {
 	inicializarHash(lista, N, cadena);
 	inicializarHashMod(lista, N, cadenaMod);
 	createOrderedArray(arreglo,N);
-	
-	
-	int op;
-	
-	while(1){
-		printf("\n1- Busqueda Hash\n2- Busqueda Arbol\n3- Busqueda Hash del alumno\n4- Busqueda Arreglo Binaria\n5- Exit");
-		printf("\nOpcion: ");
-		scanf("%d", &op);
-		fflush(stdin);
-		
-		switch(op){
-			case 1:{ 
-				hash(cadena, lista,elementosABuscar);
-			}break;
-			case 2:{
-				arbol(raiz, elementosABuscar);
-			}break;
-			case 3:{
-				hashMod(cadenaMod, lista,elementosABuscar);
-			}break;
-			case 4:{
-				arregloBusquedaBinaria(arreglo,N,elementosABuscar);
-			}break;
-			case 5:{
-				printf("\n -- exit success --");
-				exit(0);
-			}break;
-			default:{
-				printf("\n -- bad input, select 1-4 --");
-			}break;
-		}
-	}
-   
+
+
+    double resultado;
+	double resultadoHash = 0;
+	double resultadoArbol = 0;
+	double resultadoHashMod = 0;
+	double resultadoBusBin = 0;
+
+	FILE *archivo;
+	archivo = fopen("resultado.csv", "w");
+	fprintf(archivo, "Valor;Hash;Arbol;HashMod;BusBin\n");
+
+	if (archivo == NULL) {
+        perror("Error al abrir el archivo");
+        return 1;
+    }
+
+   for (int i = 0; i < ELEMENTOS; i++) {
+        elementosABuscar = rand() % N;
+        fprintf(archivo, "%d;", elementosABuscar);
+
+        // Obtener y almacenar resultados individuales
+        double resHash = hash(cadena, elementosABuscar);
+        double resArbol = arbol(raiz, elementosABuscar);
+        double resHashMod = hashMod(cadenaMod, elementosABuscar);
+        double resBusBin = arregloBusquedaBinaria(arreglo, N, elementosABuscar);
+
+        // Sumar resultados a los acumuladores
+        resultadoHash += resHash;
+        resultadoArbol += resArbol;
+        resultadoHashMod += resHashMod;
+        resultadoBusBin += resBusBin;
+
+        // Escribir resultados individuales en el archivo
+        fprintf(archivo, "%f;%f;%f;%f\n", resHash, resArbol, resHashMod, resBusBin);
+    }
+
+    fclose(archivo);
+
+    printf("Archivo resultado.csv generado correctamente.\n");
+
+	// Arreglo con promedios para generar grafico de barras
+    const int numValues = 4;
+    double values[numValues];
+
+	values[0] = resultadoHash/1000;
+	values[1] = resultadoArbol/1000;
+	values[2] = resultadoHashMod/1000;
+	values[3] = resultadoBusBin/1000;
+
+    // Imprime los promedios de las busquedas en consola
+    printf("Tiempo Promedio Busqueda Hash: \t\t%lf segundos\n", values[0]);
+    printf("Tiempo Promedio Busqueda Arbol: \t%lf segundos\n", values[1]);
+    printf("Tiempo Promedio Busqueda HashMod: \t%lf segundos\n", values[2]);
+    printf("Tiempo Promedio Busqueda binaria: \t%lf segundos\n", values[3]);
+
+    //Comprueba si esta instalado Gnuplot
+    if(!system("gnuplot --version") != 0){
+    // Generar el script de Gnuplot
+    generateGnuplotScript("script.gnuplot", values, numValues);
+
+    // Ejecutar el script de Gnuplot
+    system("gnuplot script.gnuplot");
+
+    printf("Grafico generado correctamente\n");
+
+    }
+    else{
+        printf("No se pudo generar un grafico. No se encuentra instalado Gnuplot\n");
+    }
+
 	return 0;
 }
 
-void arbol(tree *raiz, int arr[]){
+double arbol(tree *raiz, int arr){
 
 	clock_t start, end;
     double cpu_time_used=0;
 	int valor;
-	tree *aux;
+	tree *aux = NULL;
 
-	int encontrados=0;
-	double average_time=0;
-
-	
-	for(int i=0;i<ELEMENTOS;i++){
-		valor=arr[i];
+		valor=arr;
 		start = clock();
 		aux=findTreeNode(raiz,valor);
 		end = clock();
-		cpu_time_used = cpu_time_used + ((double) (end - start)) / CLOCKS_PER_SEC;
-		
-	}
-	
-	
-	
-	average_time=cpu_time_used;
-	printf("- Arbol - Tomo %f segundos.\nEl promedio fue %f milisegundos.\n", cpu_time_used, average_time);
-}
-
-void hash(list *cadena[], list *lista, int arr[]){
-	clock_t start, end;
-    double cpu_time_used;
-
-	/*
-	start = clock();
-    // Aca se cargaban las cosas
-    end = clock();
-	cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-	printf("Tomo %f milisegundos.\n", cpu_time_used*1000);
-	*/
-    //printHash(cadena);
-	
-	/*do{
-		printf("Valor a buscar: ");
-		scanf("%d", &valor);
-		start = clock();
-			
-		if(searchHash(valor,cadena) == 1){
-			printf("Valor encontrado\n");
-		}
-
-		else{
-			printf("Valor no encontrado.\n");
-		}
-
-		end = clock();				
 		cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
 
-		printf("Tomo %f milisegundos.\n", cpu_time_used*1000);
+		return cpu_time_used;
 
-	}while(valor!=-1);
-	*/
+	//printf("- Arbol - Tomo %f segundos.\n", cpu_time_used);
+
+}
+
+double hash(list *cadena[], int arr){
+	clock_t start, end;
+    double cpu_time_used = 0;
+
 	int valor;
-	double average_time;
 
-	for(int i=0;i<ELEMENTOS;i++){
-		valor=arr[i];
+		valor=arr;
 		start = clock();
 		searchHash(valor,cadena);
 		end = clock();
-		cpu_time_used = cpu_time_used + ((double) (end - start)) / CLOCKS_PER_SEC;
-	
-	}
-	average_time=cpu_time_used;
-	printf("- Hash - Tomo %f segundos.\nEl promedio fue %f milisegundos.\n", cpu_time_used, average_time);
+		cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
 
+	return cpu_time_used;
 
+	//printf("- Hash - Tomo %f segundos.\n", cpu_time_used);
 
 
 }
 
-void hashMod(list *cadenaMod[], list *lista, int arr[]){
+double hashMod(list *cadenaMod[], int arr){
 	clock_t start, end;
-    double cpu_time_used;
+    double cpu_time_used = 0;
 
 	int valor;
-	double average_time;
 
-	for(int i=0;i<ELEMENTOS;i++){
-		valor=arr[i];
+		valor=arr;
 		start = clock();
 		searchHashMod(valor,cadenaMod);
 		end = clock();
-		cpu_time_used = cpu_time_used + ((double) (end - start)) / CLOCKS_PER_SEC;
-	
-	}
-	average_time=cpu_time_used;
-	printf("- Hash mod - Tomo %f segundos.\nEl promedio fue %f milisegundos.\n", cpu_time_used, average_time);
+		cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+
+		return cpu_time_used;
+
+	//printf("- Hash mod - Tomo %f segundos.\n", cpu_time_used);
 
 }
 
-void arregloBusquedaBinaria(int arr[], int n, int arr2[]){
+double arregloBusquedaBinaria(int arr[], int n, int arr2){
 	clock_t start, end;
-    double cpu_time_used;
+    double cpu_time_used = 0;
 	int valor;
-	double average_time;
 
-	for(int i=0;i<ELEMENTOS;i++){
-		valor=arr2[i];
+		valor=arr2;
 		start = clock();
 		binarySearch(arr,n,valor);
 		end = clock();
-		cpu_time_used = cpu_time_used + ((double) (end - start)) / CLOCKS_PER_SEC;
+		cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
 
-	}
+		return cpu_time_used;
 
-	average_time=cpu_time_used;
-	printf("- Busqueda Binaria - Tomo %f segundos.\nEl promedio fue %f milisegundos.\n", cpu_time_used, average_time);
+	//printf("- Busqueda Binaria - Tomo %f segundos.\n", cpu_time_used);
 
 	
 }
