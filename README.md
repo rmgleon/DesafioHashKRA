@@ -21,5 +21,5 @@ En una terminal dentro de la carpeta raiz:
 4. ```cmake --build .```
 
 #### Gcc
-- ```gcc -o DesafioHashKRA app.c arbol_binario.c tabla_hash.c tabla_hash_mod.c arreglo_binario.c arreglo_interpolacion.c```
+- ```gcc -o DesafioHashKRA app.c headers/arbol_binario.c headers/tabla_hash.c headers/tabla_hash_mod.c headers/arreglo_binario.c headers/arreglo_interpolacion.c```
     
