@@ -11,7 +11,6 @@
 
 #define ELEMENTOS 1000
 
-
 // Funcion para generar gráfico
 
 void generateGnuplotScript(const char *filename, double *values, int numValues) {
@@ -26,10 +25,13 @@ void generateGnuplotScript(const char *filename, double *values, int numValues) 
     fprintf(file, "set title 'Tiempo promedio de busquedas'\n");
     fprintf(file, "set style data histograms\n");
     fprintf(file, "set style fill solid\n");
-    fprintf(file, "set boxwidth 0.5\n");
-    fprintf(file, "set ylabel 'Tiempo (s)'\n");
-	fprintf(file, "set yrange [0:0.0001]\n"); //Modificar en caso de que en el grafico una de las busquedas sobrepase el valor
+    fprintf(file, "set boxwidth 0.7\n");
+    fprintf(file, "set ylabel 'Tiempo (μs)'\n");
+	fprintf(file, "set yrange [0:2.0000]\n"); //Modificar en caso de que en el grafico una de las busquedas sobrepase el valor
+	fprintf(file, "set ytics 0.2000\n"); // This will set y-axis ticks at every 0.1 interval
     fprintf(file, "set xtics rotate by -45\n");
+	fprintf(file, "set grid\n");
+	fprintf(file, "set grid linecolor rgb '#808080' linewidth 1.5 linetype 1\n");
     fprintf(file, "set xtics ('Promedio Hash' 0, 'Promedio Arbol' 1, 'Promedio HashMod' 2, 'Promedio Bus binaria' 3)\n");
 
 	fprintf(file, "plot '-' using 2:xtic(1) title 'Tiempo Promedio'\n");
@@ -162,10 +164,10 @@ int main(int argc, char *argv[]) {
 	values[3] = resultadoBusBin/1000;
 
     // Imprime los promedios de las busquedas en consola
-    printf("Tiempo Promedio Busqueda Hash: \t\t%lf segundos\n", values[0]);
-    printf("Tiempo Promedio Busqueda Arbol: \t%lf segundos\n", values[1]);
-    printf("Tiempo Promedio Busqueda HashMod: \t%lf segundos\n", values[2]);
-    printf("Tiempo Promedio Busqueda binaria: \t%lf segundos\n", values[3]);
+    printf("Tiempo Promedio Busqueda Hash: \t\t%lf microsegundos\n", values[0]);
+    printf("Tiempo Promedio Busqueda Arbol: \t%lf microsegundos\n", values[1]);
+    printf("Tiempo Promedio Busqueda HashMod: \t%lf microsegundos\n", values[2]);
+    printf("Tiempo Promedio Busqueda binaria: \t%lf microsegundos\n", values[3]);
 
     //Comprueba si esta instalado Gnuplot
     if(!system("gnuplot --version") != 0){
@@ -196,11 +198,11 @@ double arbol(tree *raiz, int arr){
 		start = clock();
 		aux=findTreeNode(raiz,valor);
 		end = clock();
-		cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+		cpu_time_used = ((double) (end - start));
 
 		return cpu_time_used;
 
-	//printf("- Arbol - Tomo %f segundos.\n", cpu_time_used);
+	//printf("- Arbol - Tomo %f microsegundos.\n", cpu_time_used);
 
 }
 
@@ -214,11 +216,11 @@ double hash(list *cadena[], int arr){
 		start = clock();
 		searchHash(valor,cadena);
 		end = clock();
-		cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+		cpu_time_used = ((double) (end - start));
 
 	return cpu_time_used;
 
-	//printf("- Hash - Tomo %f segundos.\n", cpu_time_used);
+	//printf("- Hash - Tomo %f microsegundos.\n", cpu_time_used);
 
 
 }
@@ -233,11 +235,11 @@ double hashMod(list *cadenaMod[], int arr){
 		start = clock();
 		searchHashMod(valor,cadenaMod);
 		end = clock();
-		cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+		cpu_time_used = ((double) (end - start));
 
 		return cpu_time_used;
 
-	//printf("- Hash mod - Tomo %f segundos.\n", cpu_time_used);
+	//printf("- Hash mod - Tomo %f microsegundos.\n", cpu_time_used);
 
 }
 
@@ -250,11 +252,11 @@ double arregloBusquedaBinaria(int arr[], int n, int arr2){
 		start = clock();
 		binarySearch(arr,n,valor);
 		end = clock();
-		cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+		cpu_time_used = ((double) (end - start));
 
 		return cpu_time_used;
 
-	//printf("- Busqueda Binaria - Tomo %f segundos.\n", cpu_time_used);
+	//printf("- Busqueda Binaria - Tomo %f microsegundos.\n", cpu_time_used);
 
 	
 }
