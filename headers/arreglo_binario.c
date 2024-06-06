@@ -1,4 +1,4 @@
-#include "headers/arreglo_binario.h"
+#include "arreglo_binario.h"
 #include <stdio.h>
 #include <stdlib.h>
 

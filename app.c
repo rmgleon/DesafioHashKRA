@@ -226,7 +226,7 @@ double arbol(tree *raiz, int arr){
 		end = clock();
 		cpu_time_used = ((double) (end - start));
 
-		return cpu_time_used;
+	return cpu_time_used;
 }
 
 double hash(list *cadena[], int arr){
@@ -256,7 +256,7 @@ double hashMod(list *cadenaMod[], int arr){
 		end = clock();
 		cpu_time_used = ((double) (end - start));
 
-		return cpu_time_used;
+	return cpu_time_used;
 }
 
 double arregloBusquedaBinaria(int arr[], int tam, int arr2){
@@ -270,18 +270,19 @@ double arregloBusquedaBinaria(int arr[], int tam, int arr2){
 		end = clock();
 		cpu_time_used = ((double) (end - start));
 
-		return cpu_time_used;
+	return cpu_time_used;
 }
 
 double arregloBusquedaInterpolacion(int arr[], int tam, int arr2){
 	clock_t start, end;
     double cpu_time_used = 0;
 	int valor;
+	
 		valor=arr2;
 		start = clock();
 		interpolationSearch(arr,tam,valor);
 		end = clock();
 		cpu_time_used = ((double) (end - start));
 
-		return cpu_time_used;
+	return cpu_time_used;
 }

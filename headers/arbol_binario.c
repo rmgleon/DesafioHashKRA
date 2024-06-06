@@ -1,4 +1,4 @@
-#include "headers/arbol_binario.h"
+#include "arbol_binario.h"
 #include <stdlib.h>
 #include <stdio.h>
 

@@ -1,4 +1,4 @@
-#include "headers/tabla_hash.h"
+#include "tabla_hash.h"
 #include <stdio.h>
 #include <stdlib.h>
 

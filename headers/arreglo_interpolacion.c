@@ -1,4 +1,4 @@
-#include "headers/arreglo_interpolacion.h"
+#include "arreglo_interpolacion.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
