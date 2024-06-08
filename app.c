@@ -137,7 +137,7 @@ int main(int argc, char *argv[]) {
 
 	FILE *archivo;
 	archivo = fopen("resultado.csv", "w");
-	fprintf(archivo, "Valor;Hash;Arbol;HashMod;BusBin\n");
+	fprintf(archivo, "Valor;Hash;Arbol;HashMod;BusBin;BusInt\n");
 
 	if (archivo == NULL) {
         perror("Error al abrir el archivo");
@@ -209,7 +209,7 @@ int main(int argc, char *argv[]) {
     else{
         printf("No se pudo generar un grafico. No se encuentra instalado Gnuplot\n");
     }
-
+	
 	return 0;
 }
 

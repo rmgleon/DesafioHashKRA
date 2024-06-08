@@ -15,16 +15,16 @@ tree *createTreeNode (int val){
 }
 
 // Toma un arbol y un valor y lo añade como un nodo.
-// Si el arbol esta vacio, se le asigna un nodo. 
+// Si el arbol esta vacio, se le asigna el primer nodo.
 void addTreeNode (tree **arbol, int val){
 	// Caso 1: El  nodo esta vacio  || El arbol esta vacio
 	if (*arbol==NULL)
 		*arbol = createTreeNode(val);
 	// Caso 2: El valor ingresado es mayor
-	if ((*arbol)->dato<val)
+	else if ((*arbol)->dato<val)
 		addTreeNode(&(*arbol)->right,val);
 	// Caso 3: El valor ingresado es menor 
-	if ((*arbol)->dato>val)
+	else if ((*arbol)->dato>val)
 		addTreeNode(&(*arbol)->left,val);
 }
 
